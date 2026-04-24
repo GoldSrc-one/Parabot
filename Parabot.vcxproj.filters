@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="bot\bot.cpp" />
+    <ClCompile Include="bot\bot_client.cpp" />
+    <ClCompile Include="bot\marker.cpp" />
+    <ClCompile Include="bot\parabot.cpp" />
+    <ClCompile Include="bot\pb_global.cpp" />
+    <ClCompile Include="bot\sounds.cpp" />
+    <ClCompile Include="bot\utilityfuncs.cpp" />
+    <ClCompile Include="dlls\physint.cpp" />
+    <ClCompile Include="bot\pb_action.cpp" />
+    <ClCompile Include="bot\pb_cell.cpp" />
+    <ClCompile Include="bot\pb_chat.cpp" />
+    <ClCompile Include="bot\pb_combat.cpp" />
+    <ClCompile Include="bot\pb_combatgoals.cpp" />
+    <ClCompile Include="bot\pb_configuration.cpp" />
+    <ClCompile Include="bot\pb_focus.cpp" />
+    <ClCompile Include="bot\pb_goalfinder.cpp" />
+    <ClCompile Include="bot\pb_goals.cpp" />
+    <ClCompile Include="bot\pb_journey.cpp" />
+    <ClCompile Include="bot\pb_kills.cpp" />
+    <ClCompile Include="bot\pb_mapcells.cpp" />
+    <ClCompile Include="bot\pb_mapgraph.cpp" />
+    <ClCompile Include="bot\pb_mapimport.cpp" />
+    <ClCompile Include="bot\pb_navpoint.cpp" />
+    <ClCompile Include="bot\pb_needs.cpp" />
+    <ClCompile Include="bot\pb_observer.cpp" />
+    <ClCompile Include="bot\pb_path.cpp" />
+    <ClCompile Include="bot\pb_perception.cpp" />
+    <ClCompile Include="bot\pb_roaming.cpp" />
+    <ClCompile Include="bot\pb_sectors.cpp" />
+    <ClCompile Include="bot\pb_vistable.cpp" />
+    <ClCompile Include="bot\pb_weapon.cpp" />
+    <ClCompile Include="bot\pb_weaponhandling.cpp" />
+    <ClCompile Include="bot\pbt_priorityqueue.cpp" />
+    <ClCompile Include="dlls\commands.cpp" />
+    <ClCompile Include="dlls\dll.cpp" />
+    <ClCompile Include="dlls\engine.cpp" />
+    <ClCompile Include="dlls\engine_debug.cpp" />
+    <ClCompile Include="dlls\h_export.cpp" />
+    <ClCompile Include="dlls\startframe.cpp" />
+    <ClCompile Include="dlls\util.cpp" />
+    <ClCompile Include="metamod\meta_api.cpp" />
+    <ClCompile Include="dlls\linkfunc.cpp" />
+  </ItemGroup>
+</Project>

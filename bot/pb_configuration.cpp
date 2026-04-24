@@ -1,7 +1,9 @@
 #include "pb_configuration.h"
 #include "pb_global.h"
 #include "bot.h"
+#ifndef _WIN32
 #include <dirent.h>
+#endif
 
 extern int mod_id;
 extern char mod_name[32];
@@ -332,7 +334,6 @@ bool PB_Configuration::savePersonalities( const char *personalityFile )
 bool PB_Configuration::loadModelList( const char *gamedir )
 {
 	char filePath[64];
-	DIR *dfd;
 	struct dirent *model;
 	static bool bGamedirIsEmpty = false;
 
@@ -341,7 +342,8 @@ bool PB_Configuration::loadModelList( const char *gamedir )
 
 	infoMsg( "Loading list of models from %s... ", filePath );
 
-	dfd = opendir( filePath );
+#ifndef _WIN32
+	DIR* dfd = opendir( filePath );
 
 	while( ( model = readdir( dfd ) ) )
 	{
@@ -354,6 +356,25 @@ bool PB_Configuration::loadModelList( const char *gamedir )
 		playerModelList.push_back( strdup( model->d_name ) );
 	}
 	closedir( dfd );
+#else
+	strcat(filePath, "/*");
+
+	WIN32_FIND_DATA findData = {};
+	HANDLE findHandle = FindFirstFile(filePath, &findData);
+	if(findHandle == INVALID_HANDLE_VALUE) {
+		infoMsg("FindFirstFile failed!\n");
+		return false;
+	}
+
+	do {
+		if(findData.cFileName[0] == '.')
+			continue;
+
+		playerModelList.push_back(strdup(findData.cFileName));
+	} while(FindNextFile(findHandle, &findData));
+
+	FindClose(findHandle);
+#endif
 
 	if( !playerModelList.size() )
 	{

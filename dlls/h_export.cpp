@@ -168,23 +168,23 @@ extern "C" void DLLEXPORT WINAPI GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEn
 		switch( mod_id )
 		{
 			case AG_DLL:
-				gamedll = "/dlls/ag."OS_LIB_EXT;
+				gamedll = "/dlls/ag." OS_LIB_EXT;
 				break;
 			default:
 			case VALVE_DLL:
-				gamedll = "/dlls/hl."OS_LIB_EXT;
+				gamedll = "/dlls/hl." OS_LIB_EXT;
 				break;
 			case DMC_DLL:
-				gamedll = "/dlls/dmc."OS_LIB_EXT;
+				gamedll = "/dlls/dmc." OS_LIB_EXT;
 				break;
 			case GEARBOX_DLL:
-				gamedll = "/dlls/opfor."OS_LIB_EXT;
+				gamedll = "/dlls/opfor." OS_LIB_EXT;
 				break;
 			case HOLYWARS_DLL:
-				gamedll = "/dlls/holywars."OS_LIB_EXT;
+				gamedll = "/dlls/holywars." OS_LIB_EXT;
 				break;
 			case HUNGER_DLL:
-                                gamedll = "/dlls/einar."OS_LIB_EXT;
+                                gamedll = "/dlls/einar." OS_LIB_EXT;
                                 break;
 		}
 		strcat( filePath, gamedll );

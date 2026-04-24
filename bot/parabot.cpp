@@ -760,7 +760,7 @@ void CParabot::followActualRoute()
 			cellTimeOut = worldTime() + 1.0;
 		}
 		else {
-			// bisherigen traffic auf Teilstrecke auswerten, falls <3 Verbindung löschen
+			// bisherigen traffic auf Teilstrecke auswerten, falls <3 Verbindung lï¿½schen
 			if ( map.cell( botCell ).getTraffic( targetCell ) < 3 ) {
 				if ( map.cell( botCell ).delNeighbour( targetCell ) ) {
 #ifdef _DEBUG
@@ -777,8 +777,8 @@ void CParabot::followActualRoute()
 					Vector c0 = map.cell( botCell ).pos() -Vector(0,0,8);
 					Vector c1 = map.cell( roamingRoute[roamingIndex+1] ).pos() +Vector(0,0,8);
 					Vector c2 = map.cell( targetCell ).pos();
-					debugBeam( c1, c2, 250, 0 );	// rot vom Vorgänger
-					debugBeam( c0, c2, 250, 1 );	// grün vom bot aus
+					debugBeam( c1, c2, 250, 0 );	// rot vom Vorgï¿½nger
+					debugBeam( c0, c2, 250, 1 );	// grï¿½n vom bot aus
 					debugMarker( c2, 250 );
 #endif
 					map.cell( roamingRoute[roamingIndex+1] ).delNeighbour( targetCell );

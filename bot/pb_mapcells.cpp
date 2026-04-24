@@ -268,8 +268,8 @@ int PB_MapCells::initNeighbours( int cellIndex, int firstNb )
 		if (failed) goto TargetFailed;												\
 		for (int n=0; n<10; n++) {													\
 			short nb = cellArray[currentCell].getNeighbour( n );					\
-			short nbg = cellArray[nb].getGround();									\
 			if (nb == NO_CELL_REGISTERED) break;									\
+			short nbg = cellArray[nb].getGround();									\
 			if ( cellArray[nb].getEnvDamage() > 20 ||								\
 				 (nbg>=0 && getNavpoint( nbg ).needsTriggering() && !getNavpoint( nbg ).isTriggered()) ||	\
 				 avoid ) continue;													\

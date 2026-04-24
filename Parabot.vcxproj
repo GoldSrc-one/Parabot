@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="bot\bot.cpp" />
+    <ClCompile Include="bot\bot_client.cpp" />
+    <ClCompile Include="bot\marker.cpp" />
+    <ClCompile Include="bot\parabot.cpp" />
+    <ClCompile Include="bot\pbt_priorityqueue.cpp" />
+    <ClCompile Include="bot\pb_action.cpp" />
+    <ClCompile Include="bot\pb_cell.cpp" />
+    <ClCompile Include="bot\pb_chat.cpp" />
+    <ClCompile Include="bot\pb_combat.cpp" />
+    <ClCompile Include="bot\pb_combatgoals.cpp" />
+    <ClCompile Include="bot\pb_configuration.cpp" />
+    <ClCompile Include="bot\pb_focus.cpp" />
+    <ClCompile Include="bot\pb_global.cpp" />
+    <ClCompile Include="bot\pb_goalfinder.cpp" />
+    <ClCompile Include="bot\pb_goals.cpp" />
+    <ClCompile Include="bot\pb_journey.cpp" />
+    <ClCompile Include="bot\pb_kills.cpp" />
+    <ClCompile Include="bot\pb_mapcells.cpp" />
+    <ClCompile Include="bot\pb_mapgraph.cpp" />
+    <ClCompile Include="bot\pb_mapimport.cpp" />
+    <ClCompile Include="bot\pb_navpoint.cpp" />
+    <ClCompile Include="bot\pb_needs.cpp" />
+    <ClCompile Include="bot\pb_observer.cpp" />
+    <ClCompile Include="bot\pb_path.cpp" />
+    <ClCompile Include="bot\pb_perception.cpp" />
+    <ClCompile Include="bot\pb_roaming.cpp" />
+    <ClCompile Include="bot\pb_sectors.cpp" />
+    <ClCompile Include="bot\pb_vistable.cpp" />
+    <ClCompile Include="bot\pb_weapon.cpp" />
+    <ClCompile Include="bot\pb_weaponhandling.cpp" />
+    <ClCompile Include="bot\sounds.cpp" />
+    <ClCompile Include="bot\utilityfuncs.cpp" />
+    <ClCompile Include="dlls\commands.cpp" />
+    <ClCompile Include="dlls\dll.cpp" />
+    <ClCompile Include="dlls\engine.cpp" />
+    <ClCompile Include="dlls\engine_debug.cpp" />
+    <ClCompile Include="dlls\h_export.cpp" />
+    <ClCompile Include="dlls\linkfunc.cpp" />
+    <ClCompile Include="dlls\physint.cpp" />
+    <ClCompile Include="dlls\startframe.cpp" />
+    <ClCompile Include="dlls\util.cpp" />
+    <ClCompile Include="metamod\meta_api.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{8ccd8d69-6dc9-495e-95e9-5022500de0a5}</ProjectGuid>
+    <RootNamespace>Parabot</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <EnableASAN>true</EnableASAN>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;PARABOT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>bot;utils;common;dlls;engine;pm_shared;metamod;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <ModuleDefinitionFile>Parabot.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;PARABOT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>bot;utils;common;dlls;engine;pm_shared;metamod;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

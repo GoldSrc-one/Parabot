@@ -118,7 +118,7 @@ Vector PB_Percept::predictedAppearance( const Vector &botPos )
 		short origin = map.getCellId( lastSeenPos );
 		short start = map.getCellId( lastPos );
 		short target = map.getCellId( botPos );
-		if ( start==NO_CELL_FOUND || target==NO_CELL_FOUND ) return predAppearance;
+		if (origin == NO_CELL_FOUND || start == NO_CELL_FOUND || target == NO_CELL_FOUND ) return predAppearance;
 
 		if (hasBeenVisible() && map.lineOfSight( origin, target )) {
 			// bot is maintaining LOS -> probably enemy is searching cover!

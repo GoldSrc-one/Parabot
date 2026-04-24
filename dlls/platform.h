@@ -28,6 +28,10 @@
 #define OS_LIB_EXT "dll"
 #undef CreateDirectory
 #define CreateDirectory(p, n) CreateDirectoryA(p, n)
+#undef strdup
+#define strdup _strdup
+#undef stricmp
+#define stricmp _stricmp
 #else // _WIN32
 
 #ifdef __APPLE__
