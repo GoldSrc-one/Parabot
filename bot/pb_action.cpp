@@ -51,7 +51,7 @@ void PB_Action::init( edict_t *botEnt )
 	lastMove = worldTime();
 	lastMoveCheck = worldTime();
 	vupdTime = 0.1;
-	weaponCone = 0.1;	// 5°
+	weaponCone = 0.1;	// 5ï¿½
 	memset( &targetDiff, 0, sizeof targetDiff );
 }
 

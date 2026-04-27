@@ -331,49 +331,44 @@ bool PB_Configuration::savePersonalities( const char *personalityFile )
 	return true;
 }
 
-bool PB_Configuration::loadModelList( const char *gamedir )
-{
+bool PB_Configuration::loadModelList(const char* gamedir) {
 	char filePath[64];
-	struct dirent *model;
+	struct dirent* model;
 	static bool bGamedirIsEmpty = false;
 
-	strcpy( filePath, gamedir );
-	strcat( filePath, "/models/player" );
+	strcpy(filePath, gamedir);
+	strcat(filePath, "/models/player");
 
-	infoMsg( "Loading list of models from %s... ", filePath );
+	infoMsg("Loading list of models from %s... ", filePath);
 
 #ifndef _WIN32
-	DIR* dfd = opendir( filePath );
+	DIR* dfd = opendir(filePath);
 
-	while( ( model = readdir( dfd ) ) )
-	{
-		if( FStrEq( model->d_name, ".") )
+	while((model = readdir(dfd))) {
+		if(FStrEq(model->d_name, "."))
 			continue;
 
-		if( FStrEq( model->d_name, "..") )
+		if(FStrEq(model->d_name, ".."))
 			continue;
 
-		playerModelList.push_back( strdup( model->d_name ) );
+		playerModelList.push_back(strdup(model->d_name));
 	}
-	closedir( dfd );
+	closedir(dfd);
 #else
 	strcat(filePath, "/*");
 
 	WIN32_FIND_DATA findData = {};
 	HANDLE findHandle = FindFirstFile(filePath, &findData);
-	if(findHandle == INVALID_HANDLE_VALUE) {
-		infoMsg("FindFirstFile failed!\n");
-		return false;
+	if(findHandle != INVALID_HANDLE_VALUE) {
+		do {
+			if(findData.cFileName[0] == '.')
+				continue;
+
+			playerModelList.push_back(strdup(findData.cFileName));
+		} while(FindNextFile(findHandle, &findData));
+
+		FindClose(findHandle);
 	}
-
-	do {
-		if(findData.cFileName[0] == '.')
-			continue;
-
-		playerModelList.push_back(strdup(findData.cFileName));
-	} while(FindNextFile(findHandle, &findData));
-
-	FindClose(findHandle);
 #endif
 
 	if( !playerModelList.size() )
