@@ -843,6 +843,12 @@ void CParabot::botThink()
 		if (!actualNavpoint->reached( ent )) actualNavpoint = 0;
 	}
 
+	if(mod_id == DMC_DLL) {
+		clientdata_t cd = {};
+		MDLL_UpdateClientData(ent, 1, &cd);
+		ent->v.weapons = cd.weapons;
+	}
+
 	combat.weapon.initCurrentWeapon();
 
 	needs.updateWishList();

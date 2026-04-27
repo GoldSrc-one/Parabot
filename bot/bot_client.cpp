@@ -171,6 +171,16 @@ void BotClient_Valve_WeaponList(void *p, int bot_index)
    {
       state++;
       bot_weapon.iId = *(int *)p;  // weapon ID
+	  if(mod_id == DMC_DLL) {
+		  int dmcId = 0;
+		  for(int iDmcWeapon = 0; iDmcWeapon < MAX_DMC_WEAPONS; iDmcWeapon++) {
+			  if(bot_weapon.iId & (1 << iDmcWeapon)) {
+				  dmcId = iDmcWeapon;
+				  break;
+			  }
+		  }
+		  bot_weapon.iId = dmcId;
+	  }
    }
    else if (state == 8)
    {
