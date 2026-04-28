@@ -11,7 +11,7 @@ bool playerExists( edict_t *pEdict )
 {
 	if (!pEdict) return false;
 	if (ENTINDEX( pEdict )) {
-		if (!pEdict->free && pEdict->v.netname != 0) return true;
+		if (!pEdict->free && pEdict->v.netname != 0 && !(pEdict->v.flags & FL_DORMANT)) return true;
 	}
 	return false;
 }
