@@ -195,6 +195,9 @@ extern int  valveTeamNumber;
 // return team number 0 through 3 based what MOD uses for team numbers
 int UTIL_GetTeam(edict_t *pEntity)
 {
+	if(pEntity->v.team > 0)
+		return pEntity->v.team - 1;
+
 	const char *infobuffer;
 	char teamName[32];
 	char modelName[32];
