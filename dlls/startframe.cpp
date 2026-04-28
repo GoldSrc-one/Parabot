@@ -346,7 +346,6 @@ void checkForBotCreation()
 
 			float avgTime = 2.0 * pbConfig.stayTime() / ( pbConfig.minBots() + pbConfig.maxBots() );
 			bot_check_time = gpGlobals->time + RANDOM_FLOAT( 0.5*avgTime, 1.5*avgTime );
-			float rnd = RANDOM_FLOAT( 0, 100 );
 
 			if ( numberOfClients == gpGlobals->maxClients ) {
 				// hold one slot free for human players
@@ -358,16 +357,6 @@ void checkForBotCreation()
 					if ( numBots < (pbConfig.minBots()-1) )
 						bot_check_time = gpGlobals->time + 5.0;		// add bots faster
 				}
-			}
-			else if ( numBots == pbConfig.minBots() ) {
-				if ( rnd < 50 && numberOfClients < (gpGlobals->maxClients-1) ) addRandomBot(); 
-			}
-			else if ( numBots < pbConfig.maxBots() ) {
-				if ( rnd < 30 && numberOfClients < (gpGlobals->maxClients-1) ) addRandomBot();
-				else if ( rnd > 70 && numBots > 0 ) kickRandomBot();
-			}
-			else if ( numBots == pbConfig.maxBots() ) {
-				if ( rnd < 50 && numBots > 0 ) kickRandomBot();
 			}
 			else if ( numBots > pbConfig.maxBots() ) {
 				kickRandomBot();
