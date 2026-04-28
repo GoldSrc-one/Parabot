@@ -751,8 +751,6 @@ void PB_Observer::observeAll()
 			pos = obs[i].player->v.origin;
 			if (i==playerNr) playerPos = pos;
 			nav = getNearestNavpoint( obs[i].player );
-			assert( nav != 0 );
-
 			if( !nav )
 				continue;
 			if ( nav->reached( obs[i].player ) ) {
