@@ -43,6 +43,7 @@ int message_Damage = 0;
 int message_Death = 0;
 int message_Money = 0;  // for Counter-Strike
 int message_HLTV = 0;
+int message_ScreenFade = 0;
 
 void pfnChangeLevel(const char *s1, const char *s2)
 {
@@ -190,6 +191,9 @@ void pfnMessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *
 					botMsgFunction = BotClient_Hunger_Damage;
 				break;
 			}
+
+			if(msg_type == message_ScreenFade)
+				botMsgFunction = BotClient_Valve_ScreenFade;
          }
 		 else {	// message for a human client
 			if (msg_type == message_CurWeapon) {
@@ -269,6 +273,7 @@ int pfnRegUserMsg(const char *pszName, int iSize)
 		else if (FStrEq( pszName, "AmmoPickup"  ) )	message_AmmoPickup = msg;
 		else if (FStrEq( pszName, "Damage"      ) )	message_Damage = msg;
 		else if (FStrEq( pszName, "DeathMsg"    ) )	message_Death = msg;
+		else if (FStrEq( pszName, "ScreenFade"  ) )	message_ScreenFade = msg;
 		// TFC / CS
 		else if (FStrEq(pszName, "VGUIMenu"	) ) message_VGUI = msg;
 		// CS only			

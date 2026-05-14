@@ -647,6 +647,29 @@ void BotClient_Valve_Damage(void *p, int bot_index)
 	}
 }
 
+void BotClient_Valve_ScreenFade(void* p, int bot_index) {
+	static int state = 0;   // current state machine state
+	static int duration;
+	static int hold_time;
+
+	if(state == 0) {
+		state++;
+		duration = *(int*)p;
+	}
+	else if(state == 1) {
+		state++;
+		hold_time = *(int*)p;
+	}
+	else if(state == 6) {
+		state = 0;
+
+		float length = (duration + hold_time) / 4096.f;
+		bots[bot_index].parabot->blindedTime = gpGlobals->time + length - 2.f;
+	}
+	else {
+		state++;
+	}
+}
 
 void BotClient_Holywars_Damage(void *p, int bot_index)
 {

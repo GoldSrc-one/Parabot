@@ -57,3 +57,5 @@ void BotClient_Hunger_Damage(void *p, int bot_index);
 
 void BotClient_CS_Money(void *p, int bot_index);
 void BotClient_CS_HLTV(void *p, int bot_index);
+
+void BotClient_Valve_ScreenFade(void* p, int bot_index);

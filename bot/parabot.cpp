@@ -67,6 +67,7 @@ void CParabot::initAfterRespawn()
 	partner = 0;
 	botState = PB_NO_TASK;	
 	lastRespawn = worldTime();
+	blindedTime = 0;
 
 	action.init( ent );
 	pathfinder.init( ent, &action );
@@ -832,7 +833,7 @@ void CParabot::botThink()
 
 	// execute in 10Hz steps:
 	float difTime = worldTime()-lastThink;
-	if ( difTime >= 0 && difTime < 0.1) {
+	if ( difTime >= 0 && (difTime < 0.1 || blindedTime > worldTime())) {
 		action.perform(); // execute planned actions
 		if (action.pausing()) cellTimeOut = worldTime() + 1.0;	// adjust cellTimeOut if pausing
 		return;

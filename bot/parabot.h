@@ -39,6 +39,7 @@ public:
 	bool preemptiveFire;
 	int preemptiveWeapon, preemptiveMode;
 	float lastRespawn;
+	float blindedTime;
 
 	char		goalMove[80], goalView[80], goalAct[80];	// set when goals are executed
 
