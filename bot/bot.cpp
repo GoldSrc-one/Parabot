@@ -282,6 +282,8 @@ void BotCreate( int fixedPersNr )
 		pBot->parabot->goalFinder.addGoal( G_ACTION,
 			PI_SNARK, goalArmBestWeapon, weightArmBestWeapon );
 	}
+	pBot->parabot->goalFinder.addGoal(G_VIEW, PI_MONSTER, goalShootAtEnemy, weightShootAtMonster);
+	pBot->parabot->goalFinder.addGoal(G_ACTION, PI_MONSTER, goalArmBestWeapon, weightArmBestWeapon);
 
 	pBot->parabot->goalFinder.addGoal( G_MOVE,
 		PI_WEAPONBOX, goalGetItem, weightGetWeaponbox );

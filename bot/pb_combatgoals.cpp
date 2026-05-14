@@ -483,6 +483,11 @@ float weightShootAtSnark( CParabot *pb, PB_Percept*item )
 	return weight;
 }
 
+float weightShootAtMonster(CParabot* pb, PB_Percept* item) {
+	float weight = MAX_DIST_VI / item->distance;
+	if(weight > 5) weight = 5;
+	return weight;
+}
 
 
 void goalBunnyHop( CParabot *pb, PB_Percept*item )

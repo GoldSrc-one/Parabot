@@ -24,9 +24,10 @@
 #define PI_SNARK		12	// snark
 #define PI_NEWAREA		13	// a big area that bot hasn't seen before
 #define PI_GOAL			14  // bot_goal entity
+#define PI_MONSTER		15	// enemy monster
 
 
-#define MAX_PERCEPTION	13
+#define MAX_PERCEPTION	16
 
 // perception-item state
 #define PI_VISIBLE		(1<<0)	// is seen

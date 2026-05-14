@@ -47,6 +47,7 @@ float weightBunnyHop( CParabot *pb, PB_Percept*item );
 void    goalShootAtEnemy( CParabot *pb, PB_Percept*item );
 float weightShootAtEnemy( CParabot *pb, PB_Percept*item );
 float weightShootAtSnark( CParabot *pb, PB_Percept*item );
+float weightShootAtMonster(CParabot* pb, PB_Percept* item);
 
 // chose best weapon
 void    goalArmBestWeapon( CParabot *pb, PB_Percept*item );

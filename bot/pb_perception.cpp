@@ -29,7 +29,10 @@ MAX_DIST_VI,	// laserdot
 MAX_DIST_VI,	// tripmine
 MAX_DIST_VI,	// halo
 0,				// damage
-MAX_DIST_VI		// snark
+MAX_DIST_VI,	// snark
+0,				// newarea
+0,				// botgoal
+MAX_DIST_VI,	// monster
 };
 
 
@@ -513,6 +516,20 @@ void PB_Perception::collectData()
 	{
 		const char *pClassname = STRING(ent->v.classname);
 		
+		bool friendly = false;
+		if(FBitSet(g_uiGameFlags, GAME_TEAMPLAY) && botEnt->v.team) {
+			int entTeam = ent->v.owner ? ent->v.owner->v.team : ent->v.team;
+			if(entTeam)
+				friendly = entTeam == botEnt->v.team;
+			else
+				friendly = true;
+		}
+		else if(ent->v.owner == botEnt) {
+			friendly = true;
+		}
+		if(ent == botEnt->v.dmg_inflictor)
+			friendly = false;
+		
 		// detect players
 		if ( FStrEq( pClassname, "player" ) ) {
 			// check if valid
@@ -572,11 +589,12 @@ void PB_Perception::collectData()
 				}
 			}
 		}
-		else if ( FStrEq( pClassname, "monster_snark" ) ) {
+		else if ( FStrEq( pClassname, "monster_snark" ) || FStrEq(pClassname, "monster_penguin")) {
+			if(!friendly)
 			addIfVisible( ent, PI_SNARK );
 		}
 		else if ( FStrEq( pClassname, "monster_tripmine" ) || FStrEq( pClassname, "monster_tripsnark" ) ) {
-			if (ent->v.owner == botEnt) {
+			if (friendly) {
 				// remember own tripmines even without seeing them:
 				float dist = (ent->v.origin - botEnt->v.origin).Length();
 				detections[cdet].push_back( PB_Percept( sensitivity, ent, PI_TRACKABLE, PI_TRIPMINE, dist) );
@@ -591,7 +609,10 @@ void PB_Perception::collectData()
 					addIfVisible( beamCenter, ent, PI_TRIPMINE );	// check beamcenter
 			}
 		}
-		
+		else if(FBitSet(ent->v.flags, FL_MONSTER)) {
+			if(!friendly)
+				addIfVisible(ent, PI_MONSTER);
+		}
 	}
 
 	// determine new perceptions
