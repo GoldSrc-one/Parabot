@@ -754,17 +754,21 @@ float PB_Weapon::dmcWeaponScore( float distance, float hitProb, int flags, bool 
 		break;
 	
 	case DMC_WEAPON_LIGHTNING:
-		if ( flags & WF_NEED_GRENADE ) break;
+		if ( flags & WF_NEED_GRENADE )
+			break;
 		if ( flags & WF_UNDERWATER ) {
 			// suppose others are underwater as well ;-)
 			if (isInvulnerable( botEnt )) score = 10;
 			break;
 		}
-		if (checkAmmo && ammo1() == 0) break;
+		if (checkAmmo && ammo1() == 0)
+			break;
 
-		score = hitProb * 20;
-		if (score<3) score = 3;		
+		//out of range
+		if(distance > 600)
+			break;
 
+		score = (distance / 600.f) * hitProb * 10;
 		break;
 
 	default:
