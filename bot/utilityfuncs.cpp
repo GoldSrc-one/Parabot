@@ -21,7 +21,8 @@ bool isAlive( edict_t *pEdict )
 {
 	if (!pEdict) return false;
 	return ((pEdict->v.deadflag == DEAD_NO) &&
-            (pEdict->v.health > 0) && (pEdict->v.movetype != MOVETYPE_NOCLIP));
+            (pEdict->v.health > 0) && (pEdict->v.movetype != MOVETYPE_NOCLIP) &&
+			!FBitSet(pEdict->v.flags, FL_NOTARGET));
 }
 
 
