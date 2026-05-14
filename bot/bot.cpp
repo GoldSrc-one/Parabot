@@ -296,6 +296,9 @@ void BotCreate( int fixedPersNr )
 			PI_HALO, goalGetItem, weightGetHalo );
 	}
 
+	pBot->parabot->goalFinder.addGoal(G_MOVE | G_VIEW, PI_GOAL, goalHandleGoal, weightHandleGoal);
+	pBot->parabot->goalFinder.addGoal(G_MOVE | G_VIEW, GOAL_UNCONDITIONAL, goalGoToNavPoint, weightGoToNavPoint);
+
 	debugMsg( "BOT CREATE.\n" );
 	
 	BotSpawnInit(pBot);	// init variables

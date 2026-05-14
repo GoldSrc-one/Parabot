@@ -148,3 +148,10 @@ float weightFollowEnemy( CParabot *pb, PB_Percept*item );
 // assist team-member in combat
 void    goalAssistFire( CParabot *pb, PB_Percept*item );
 float weightAssistFire( CParabot *pb, PB_Percept*item );
+
+// bot_goal
+void    goalHandleGoal(CParabot* pb, PB_Percept* item);
+float weightHandleGoal(CParabot* pb, PB_Percept* item);
+
+void    goalGoToNavPoint(CParabot* pb, PB_Percept* item);
+float weightGoToNavPoint(CParabot* pb, PB_Percept* item);

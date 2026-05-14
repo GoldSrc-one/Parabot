@@ -639,6 +639,22 @@ void PB_Perception::collectData()
 	}
 	tactileDetections.clear();
 
+	// add bot_goal if any
+	int numGoals = 0;
+	for(auto cdi = detections[cdet].cbegin(); cdi != detections[cdet].cend(); ++cdi)
+		if(cdi->pClass == PI_GOAL)
+			numGoals++;
+	if(numGoals == 0) {
+		ent = NULL;
+		while(!FNullEnt(ent = FIND_ENTITY_BY_CLASSNAME(ent, "bot_goal"))) {
+			if(ent->v.owner && ent->v.owner != botEnt)
+				continue;
+
+			float dist = (botEnt->v.origin + botEnt->v.view_ofs - ent->v.origin).Length();
+			detections[cdet].push_back(PB_Percept(sensitivity, ent, PI_ORIG_KNOWN, PI_GOAL, dist));
+		}
+	}
+
 	// count number of overall enemies and unidentified
 	numEnemies = 0;
 	numUnidentified = 0;

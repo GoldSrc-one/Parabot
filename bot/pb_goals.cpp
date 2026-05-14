@@ -672,6 +672,168 @@ float weightMakeRoom( CParabot *pb, PB_Percept*item )
 	return weight;
 }
 
+PB_Navpoint* TryGetNearestNavpoint(CParabot* pb) {
+	static float traceRadius[32] = {};
+	auto pRadius = &traceRadius[pb->slot];
+	if(*pRadius > 1024 * 1024)
+		*pRadius = 1024 * 1024;
+
+	float minDist = 4096 * 4096;
+	PB_Navpoint* nearest = NULL;
+	for(int iNode = 0; iNode < mapGraph.numberOfNavpoints(); iNode++) {
+		auto navpoint = &mapGraph[iNode].first;
+		auto dir = navpoint->pos() - pb->botPos();
+		auto dist = dir.x * dir.x + dir.y * dir.y + dir.z * dir.z;
+		if(dist > minDist)
+			continue;
+
+		if(dist <= *pRadius) {
+			TraceResult tr = {};
+			UTIL_TraceLine(pb->botPos(), navpoint->pos(), ignore_monsters, pb->ent, &tr);
+			if(tr.flFraction < 1.0f)
+				continue;
+		}
+
+		minDist = dist;
+		nearest = navpoint;
+	}
+	if(!nearest) {
+		*pRadius = 0;
+		return NULL;
+	}
+
+	if(minDist > *pRadius) {
+		TraceResult tr = {};
+		UTIL_TraceLine(pb->botPos(), nearest->pos(), ignore_monsters, pb->ent, &tr);
+		if(tr.flFraction < 1.0f) {
+			*pRadius = minDist;
+			return NULL;
+		}
+	}
+	*pRadius = minDist;
+	return nearest;
+}
+
+static bool gGoalUnreachable[32] = {};
+void goalHandleGoal(CParabot* pb, PB_Percept* item) {
+	gGoalUnreachable[pb->slot] = false;
+	if(pb->actualPath) {
+		if(item->lastPos == item->entity->v.origin) {
+			pb->followActualPath();
+			return;
+		}
+		else {
+			pb->actualPath = NULL;
+		}
+	}
+
+	if(!pb->actualNavpoint)
+		pb->actualNavpoint = TryGetNearestNavpoint(pb);
+
+	if(pb->actualNavpoint) {
+		auto goalNavPoint = mapGraph.getNearestNavpoint(item->entity->v.origin);
+		if(goalNavPoint && pb->actualNavpoint != goalNavPoint && mapGraph.getJourney(pb->actualNavpoint->id(), goalNavPoint->id(), PATH_NORMAL, pb->actualJourney)) {
+			pb->actualPath = pb->actualJourney.getNextPath();
+			pb->actualPath->startAttempt(worldTime());
+			pb->waypoint = pb->actualPath->getNextWaypoint();
+		}
+	}
+
+	auto viewOrigin = pb->botPos() + pb->ent->v.view_ofs;
+	TraceResult tr = {};
+	if(!pb->actualPath && (UTIL_TraceLine(item->entity->v.origin, viewOrigin, ignore_monsters, item->entity, &tr), tr.flFraction < 1.0f && tr.pHit != pb->ent)) {
+		//fall back to cell nav
+		if(pb->roamingIndex >= 0) {
+			pb->setGoalMoveDescr("HandleGoal");
+			pb->followActualRoute();
+			return;
+		}
+
+		short botCell = map.getCellId(pb->ent);
+		short goalCell = map.getCellId(item->entity);
+		if(botCell != NO_CELL_FOUND && goalCell != NO_CELL_FOUND && botCell != goalCell) {
+			int pl = map.getPath(botCell, goalCell, pb->roamingRoute);
+			if(pl > 0) {
+				pb->setRoamingIndex(pl);
+				return;
+			}
+		}
+
+		//cell nav failed
+		debugMsg("Cannot find any route to goal!\n");
+		gGoalUnreachable[pb->slot] = true;
+		return;
+	}
+
+	pb->action.setMoveDir(item->entity->v.origin);
+	pb->action.setMaxSpeed();
+	pb->pathCheckWay();
+
+	if(item->entity->v.aiment && ENTINDEX(item->entity->v.aiment)) {
+		// go for the goal entity
+		auto goalEntity = item->entity->v.aiment;
+		auto goalOrigin = goalEntity->v.origin + (goalEntity->v.mins + goalEntity->v.maxs) * 0.5f;
+		auto goalDir = goalOrigin - viewOrigin;
+		float dist = fmaxf(goalDir.Length2D(), fabsf(goalDir.z));
+		if(dist <= 128.f || (UTIL_TraceLine(goalOrigin, viewOrigin, ignore_monsters, goalEntity, &tr), tr.flFraction == 1.0f || tr.pHit == pb->ent)) {
+			// push the buttons if near enough
+			if(dist <= 128.f && (item->entity->v.button & IN_DUCK)) {
+				pb->action.add(BOT_DUCK);
+			}
+			if(dist <= 64.f && (item->entity->v.button & IN_USE)) {
+				pb->action.add(BOT_USE, &goalOrigin);
+			}
+		}
+	}
+}
+
+
+float weightHandleGoal(CParabot* pb, PB_Percept* item) {
+	assert(item != 0);
+
+	if(!pb->actualPath && !pb->actualNavpoint && pb->roamingIndex < 0 && gGoalUnreachable[pb->slot])
+		return 0;
+
+	return (item->entity->v.aiment && ENTINDEX(item->entity->v.aiment)) ? 2.9f : 2.5f;
+}
+
+void goalGoToNavPoint(CParabot* pb, PB_Percept* item) {
+	if(pb->actualNavpoint || pb->actualPath)
+		return;
+
+	if(pb->roamingIndex >= 0) {
+		pb->setGoalMoveDescr("GoToNavPoint");
+		pb->followActualRoute();
+		return;
+	}
+
+	short botCell = map.getCellId(pb->ent);
+	auto navpoint = TryGetNearestNavpoint(pb);
+	if(!navpoint)
+		return;
+
+	pb->actualNavpoint = navpoint;
+	short goalCell = map.getCellId(navpoint->pos());
+	if(botCell != NO_CELL_FOUND && goalCell != NO_CELL_FOUND && botCell != goalCell) {
+		int pl = map.getPath(botCell, goalCell, pb->roamingRoute);
+		if(pl > 0) {
+			pb->setRoamingIndex(pl);
+			return;
+		}
+	}
+
+	pb->action.setMoveDir(navpoint->pos());
+	pb->action.setMaxSpeed();
+	pb->pathCheckWay();
+	return;
+}
+
+float weightGoToNavPoint(CParabot* pb, PB_Percept* item) {
+	if(pb->actualNavpoint || pb->actualPath || pb->action.gotStuck() || !FBitSet(pb->ent->v.flags, FL_ONGROUND))
+		return 0;
+
+	return gGoalUnreachable[pb->slot] ? 1.5f : 0.5f;
+}
 
 
 //---------------------------------------------------------------------------------------
