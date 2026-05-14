@@ -149,7 +149,19 @@ bool PB_Combat::shootAtEnemy( edict_t *enemy, float accuracy )
     if ( (action->getAimSkill() > 6) && (accuracy >= 0.5) ) {
 		firePos = firePos + enemy->v.view_ofs;	// aim at head
 	}
-	
+
+	Vector enemyVelocity = enemy->v.velocity;
+	//don't predict Z if the target is jumping/falling
+	//you would have to trace the fall
+	if(!FBitSet(enemy->v.flags, FL_ONGROUND) && !FBitSet(enemy->v.flags, FL_FLY))
+		enemyVelocity.z = 0;
+
+	//if the target is running slower than maxspeed, he might be accelerating
+	//let's pick a speed between the current speed and maxspeed
+	float speed = enemyVelocity.Length();
+	if(speed > 0 && speed < enemy->v.maxspeed)
+		enemyVelocity = enemyVelocity * RANDOM_FLOAT(1.f, enemy->v.maxspeed / speed);
+
 	switch( mod_id ) {
 	case AG_DLL:
 	case HUNGER_DLL:
@@ -166,8 +178,8 @@ bool PB_Combat::shootAtEnemy( edict_t *enemy, float accuracy )
 		if (weapon.currentWeapon()==HW_WEAPON_ROCKETLAUNCHER) {	
 			// aim at feet and predict movement
 			Vector feetPos = firePos;	feetPos.z = enemy->v.absmin.z + 1;
-			float dist = ((Vector)(botEnt->v.origin-enemy->v.origin)).Length();
-			Vector predictedMove = enemy->v.velocity * dist / 1600;
+			float dist = ((Vector)(botEnt->v.origin-  feetPos)).Length();
+			Vector predictedMove = enemyVelocity * dist / 1600;
 			if ( canShootAt( botEnt, feetPos + predictedMove) )
 				firePos = feetPos + predictedMove;
 		}
@@ -176,22 +188,22 @@ bool PB_Combat::shootAtEnemy( edict_t *enemy, float accuracy )
 		if (weapon.currentWeapon()==DMC_WEAPON_ROCKETLAUNCHER) {	
 			// aim at feet and predict movement
 			Vector feetPos = firePos;	feetPos.z = enemy->v.absmin.z + 1;
-			float dist = ((Vector)(botEnt->v.origin-enemy->v.origin)).Length();
-			Vector predictedMove = enemy->v.velocity * dist / 1200;
+			float dist = ((Vector)(botEnt->v.origin - feetPos)).Length();
+			Vector predictedMove = enemyVelocity * dist / 1000;
 			if ( canShootAt( botEnt, feetPos + predictedMove) )
 				firePos = feetPos + predictedMove;
 		}
 		else if (weapon.currentWeapon()==DMC_WEAPON_NAILGUN ||
 				 weapon.currentWeapon()==DMC_WEAPON_SUPERNAILGUN) {	
 			// predict movement
-			float dist = ((Vector)(botEnt->v.origin-enemy->v.origin)).Length();
-			Vector predictedMove = enemy->v.velocity * dist / 1200;
+			float dist = ((Vector)(botEnt->v.origin - firePos)).Length();
+			Vector predictedMove = enemyVelocity * dist / 1000;
 			if ( canShootAt( botEnt, firePos + predictedMove) )
 				firePos = firePos + predictedMove;
 		}
 		break;
 	}
-	return weapon.attack( firePos, accuracy, enemy->v.velocity - botEnt->v.velocity );
+	return weapon.attack( firePos, accuracy, enemyVelocity - botEnt->v.velocity );
 }
 
 
