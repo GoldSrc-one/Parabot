@@ -515,7 +515,7 @@ void PB_Perception::collectData()
 	while( !FNullEnt( ent = FIND_ENTITY_IN_SPHERE( ent, botEnt->v.origin, sensitivity * MAX_DIST_VP ) ) ) 
 	{
 		const char *pClassname = STRING(ent->v.classname);
-		
+
 		bool friendly = false;
 		if(FBitSet(g_uiGameFlags, GAME_TEAMPLAY) && botEnt->v.team) {
 			int entTeam = ent->v.owner ? ent->v.owner->v.team : ent->v.team;
@@ -581,7 +581,7 @@ void PB_Perception::collectData()
 		else if ( FStrEq( pClassname, "monster_satchel" ) ) {
 			addIfVisible( ent, PI_EXPLOSIVE );
 		}
-		else if ( FStrEq( pClassname, "grenade" ) ) {
+		else if ( FStrEq( pClassname, "grenade" ) && !FStrEq(STRING(ent->v.model), "models/w_c4.mdl")) {
 			if (!addIfVisible( ent, PI_EXPLOSIVE )) {
 				float dist = (ent->v.origin - botEnt->v.origin).Length();
 				if (dist < 200*sensitivity) {
@@ -591,7 +591,7 @@ void PB_Perception::collectData()
 		}
 		else if ( FStrEq( pClassname, "monster_snark" ) || FStrEq(pClassname, "monster_penguin")) {
 			if(!friendly)
-			addIfVisible( ent, PI_SNARK );
+				addIfVisible( ent, PI_SNARK );
 		}
 		else if ( FStrEq( pClassname, "monster_tripmine" ) || FStrEq( pClassname, "monster_tripsnark" ) ) {
 			if (friendly) {
