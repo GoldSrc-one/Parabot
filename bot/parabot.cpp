@@ -486,8 +486,20 @@ void CParabot::pathCheckWay()
 	Vector aDir( 0, action.moveAngleYaw(), 0 );	// use only yaw angle
 	UTIL_MakeVectors (aDir);
 
+	// check if bot needs to jump
+	if(!action.jumping() && FBitSet(ent->v.flags, FL_ONGROUND)) {
+		//as if the bot was ducking, because we test against the ducking hull
+		Vector adjustedBotPosition = FBitSet(ent->v.flags, FL_DUCKING) ? botPos() : (botPos() - Vector(0, 0, 18));
+		startTr = adjustedBotPosition + gpGlobals->v_forward * 16 + Vector(0, 0, 63);
+		endTr = adjustedBotPosition + gpGlobals->v_forward * 16 + Vector(0, 0, 18);
+		UTIL_TraceHull(startTr, endTr, ignore_monsters, head_hull, ent, &tr);
+		if(!tr.fStartSolid && tr.flFraction < 1.f) {
+			action.add(BOT_JUMP);
+		}
+	}
+
 	// check if bot needs to duck
-	if (mod_id != DMC_DLL ) {
+	/*if (mod_id != DMC_DLL )*/ {
 		startTr = botPos() + gpGlobals->v_forward * 16 + Vector( 0,0,36 );
 		endTr = botPos() + gpGlobals->v_forward * (16+36);
 		UTIL_TraceLine( startTr, endTr, ignore_monsters, ent, &tr);
@@ -517,6 +529,12 @@ void CParabot::pathCheckWay()
 		if (planeAngle.x<40) action.add( BOT_STRAFE_RIGHT );
 	}
 
+	startTr = botPos();
+	endTr = botPos() + gpGlobals->v_forward * 1024;
+	UTIL_TraceLine(startTr, endTr, dont_ignore_monsters, ent, &tr);
+	if(tr.pHit && tr.pHit->v.takedamage && tr.pHit->v.health > 0 && tr.pHit->v.movetype == MOVETYPE_PUSH)
+		combat.weapon.attack(tr.vecEndPos, 0.3);
+
 	if ( actualPath ) {
 		// check if some breakable object needs to be destroyed
 		PB_Navpoint *target = &(actualPath->endNav());
@@ -526,7 +544,7 @@ void CParabot::pathCheckWay()
 				debugMsg( "ERROR in pathCheckWay: No entity found!\n" );
 				return;
 			}
-			if (target->entity()->v.health > 0) {	// has to be destroyed
+			if (target->entity()->v.health > 0 && target->entity()->v.takedamage) {	// has to be destroyed
 				if (target->visible( ent )) {
 					combat.weapon.attack( target->pos(), 0.3 );
 				}
