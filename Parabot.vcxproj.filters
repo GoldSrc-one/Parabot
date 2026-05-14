@@ -44,4 +44,51 @@
     <ClCompile Include="metamod\meta_api.cpp" />
     <ClCompile Include="dlls\linkfunc.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bot\bot.h" />
+    <ClInclude Include="bot\bot_client.h" />
+    <ClInclude Include="bot\bot_func.h" />
+    <ClInclude Include="bot\bot_weapons.h" />
+    <ClInclude Include="bot\marker.h" />
+    <ClInclude Include="bot\parabot.h" />
+    <ClInclude Include="bot\pb_action.h" />
+    <ClInclude Include="bot\pb_cell.h" />
+    <ClInclude Include="bot\pb_chat.h" />
+    <ClInclude Include="bot\pb_combat.h" />
+    <ClInclude Include="bot\pb_configuration.h" />
+    <ClInclude Include="bot\pb_focus.h" />
+    <ClInclude Include="bot\pb_global.h" />
+    <ClInclude Include="bot\pb_goalfinder.h" />
+    <ClInclude Include="bot\pb_goals.h" />
+    <ClInclude Include="bot\pb_journey.h" />
+    <ClInclude Include="bot\pb_kills.h" />
+    <ClInclude Include="bot\pb_mapcells.h" />
+    <ClInclude Include="bot\pb_mapgraph.h" />
+    <ClInclude Include="bot\pb_navpoint.h" />
+    <ClInclude Include="bot\pb_needs.h" />
+    <ClInclude Include="bot\pb_observer.h" />
+    <ClInclude Include="bot\pb_path.h" />
+    <ClInclude Include="bot\pb_perception.h" />
+    <ClInclude Include="bot\pb_roaming.h" />
+    <ClInclude Include="bot\pb_sectors.h" />
+    <ClInclude Include="bot\pb_vistable.h" />
+    <ClInclude Include="bot\pb_weapon.h" />
+    <ClInclude Include="bot\pb_weaponhandling.h" />
+    <ClInclude Include="bot\pbt_dynarray.h" />
+    <ClInclude Include="bot\pbt_priorityqueue.h" />
+    <ClInclude Include="bot\sounds.h" />
+    <ClInclude Include="bot\utilityfuncs.h" />
+    <ClInclude Include="dlls\cbase.h" />
+    <ClInclude Include="dlls\cdll_dll.h" />
+    <ClInclude Include="dlls\dll.h" />
+    <ClInclude Include="dlls\engine.h" />
+    <ClInclude Include="dlls\enginecallback.h" />
+    <ClInclude Include="dlls\exportdef.h" />
+    <ClInclude Include="dlls\extdll.h" />
+    <ClInclude Include="dlls\pakextractor.h" />
+    <ClInclude Include="dlls\platform.h" />
+    <ClInclude Include="dlls\utf8_strfunc.h" />
+    <ClInclude Include="dlls\util.h" />
+    <ClInclude Include="dlls\vector.h" />
+  </ItemGroup>
 </Project>
