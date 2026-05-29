@@ -15,7 +15,7 @@ const char *PNFidString = "Parabot Waypoint File 0.8      ";
 
 
 PB_MapGraph::PB_MapGraph() : 
-	graph( 1024, 64 )
+	graph( 2048, 64 )
 {
 	nextId = 0;
 	nextPathId = 0;	// Path ID
