@@ -598,10 +598,11 @@ void PB_Observer::checkForButtonShot( int oId, Vector &pos )
 						// ...no -> add new navpoint
 						debugMsg( "Adding Buttonshot!\n" );
 						PB_Navpoint *button = mapGraph.getNearestNavpoint( tr.vecEndPos, NAV_F_BUTTON );
-						assert( button != 0 );
-						PB_Navpoint shotNav;
-						shotNav.init( pos, NAV_S_BUTTON_SHOT, button->id() );
-						mapGraph.addNavpoint( shotNav );
+						if(button) {
+							PB_Navpoint shotNav;
+							shotNav.init(pos, NAV_S_BUTTON_SHOT, button->id());
+							mapGraph.addNavpoint(shotNav);
+						}
 					}
 				}
 			}
