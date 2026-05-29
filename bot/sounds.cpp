@@ -360,7 +360,14 @@ void Sounds::parseSound( edict_t *ent, const char *sample, float vol )
 {
 	if (fatalParabotError) return;
 
-	int clientIndex;
+	if(!ent) return;
+
+	Vector pos = ent->v.origin + (ent->v.mins + ent->v.maxs) * 0.5f;
+	int clientIndex = ENTINDEX(ent) - 1;
+	if(clientIndex < 0 || clientIndex >= gpGlobals->maxClients)
+		clientIndex = UTIL_GetNearestPlayerIndex(pos) - 1;
+	if(clientIndex < 0)
+		return;
 
 	switch( mod_id ) {
 	case AG_DLL:
@@ -369,7 +376,6 @@ void Sounds::parseSound( edict_t *ent, const char *sample, float vol )
 	case GEARBOX_DLL:
 	case HOLYWARS_DLL:
 		if ( FStrEq( sample, "items/gunpickup2.wav" ) ) {		// weapon pickup
-			clientIndex = ENTINDEX( ent ) - 1;
 			player[clientIndex].itemSensableDist = AMMO_SENS_DIST;
 			player[clientIndex].itemTrackableDist = AMMO_TRACK_DIST;
 			player[clientIndex].timeItemSound = worldTime() + 0.3;
@@ -389,26 +395,18 @@ void Sounds::parseSound( edict_t *ent, const char *sample, float vol )
 			}
 		}
 		else if ( FStrEq( sample, "items/9mmclip1.wav" ) ) {	// ammo pickup
-			clientIndex = UTIL_GetNearestPlayerIndex( ent->v.origin ) - 1;
-			//ent = INDEXENT( clientIndex+1 );
 			player[clientIndex].itemSensableDist = AMMO_SENS_DIST;
 			player[clientIndex].itemTrackableDist = AMMO_TRACK_DIST;
 			player[clientIndex].timeItemSound = worldTime() + 0.3;
 			//debugMsg( "%s picked up ammo!\n", STRING(ent->v.netname) );
 		}
 		else if ( FStrEq( sample, "doors/doorstop6.wav" ) ) {	// lift usage
-			Vector pos = 0.5 * (ent->v.absmin + ent->v.absmax);  
-			pos.z = ent->v.absmax.z;
-			clientIndex = UTIL_GetNearestPlayerIndex( pos ) - 1;
-			//ent = INDEXENT( clientIndex+1 );
 			player[clientIndex].itemSensableDist = LIFT_SENS_DIST;
 			player[clientIndex].itemTrackableDist = LIFT_TRACK_DIST;
 			player[clientIndex].timeItemSound = worldTime() + 0.3;
 			//debugMsg( "%s used lift!\n", STRING(ent->v.netname) );
 		}
 		else if ( FStrEq( sample, "items/suitcharge1.wav" ) ) {// battery charger
-			Vector pos = 0.5 * (ent->v.absmin + ent->v.absmax);  
-			clientIndex = UTIL_GetNearestPlayerIndex( pos ) - 1;
 			//ent = INDEXENT( clientIndex+1 );
 			if (vol > 0) {
 				player[clientIndex].itemSensableDist = LOAD_SENS_DIST;
@@ -424,9 +422,6 @@ void Sounds::parseSound( edict_t *ent, const char *sample, float vol )
 			}
 		}
 		else if ( FStrEq( sample, "items/medcharge4.wav" ) ) {	// med charger
-			Vector pos = 0.5 * (ent->v.absmin + ent->v.absmax);  
-			clientIndex = UTIL_GetNearestPlayerIndex( pos ) - 1;
-			//ent = INDEXENT( clientIndex+1 );
 			if (vol > 0) {
 				player[clientIndex].itemSensableDist = LOAD_SENS_DIST;
 				player[clientIndex].itemTrackableDist = LOAD_TRACK_DIST;
@@ -441,21 +436,18 @@ void Sounds::parseSound( edict_t *ent, const char *sample, float vol )
 			}
 		}
 		else if ( FStrEq( sample, "items/smallmedkit1.wav" ) ) {	// medkit pickup
-			clientIndex = ENTINDEX( ent ) - 1;
 			player[clientIndex].itemSensableDist = ITEM_SENS_DIST;
 			player[clientIndex].itemTrackableDist = ITEM_TRACK_DIST;
 			player[clientIndex].timeItemSound = worldTime() + 0.3;
 			//debugMsg( "%s picked up medkit!\n", STRING(ent->v.netname) );
 		}
 		else if ( FStrEq( sample, "!336" ) ) {						// longjump pickup
-			clientIndex = ENTINDEX( ent ) - 1;
 			player[clientIndex].itemSensableDist = SPEC_ITEM_SENS_DIST;
 			player[clientIndex].itemTrackableDist = SPEC_ITEM_TRACK_DIST;
 			player[clientIndex].timeItemSound = worldTime() + 3.0;
 			debugMsg( "%s picked up longjump!\n", STRING(ent->v.netname) );
 		}
 		else if ( FStrEq( sample, "misc/jumppad.wav" ) ) {			// HW-jumppad 
-			clientIndex = UTIL_GetNearestPlayerIndex( ent->v.origin ) - 1;
 			//ent = INDEXENT( clientIndex+1 );
 			player[clientIndex].itemSensableDist = LIFT_SENS_DIST;
 			player[clientIndex].itemTrackableDist = LIFT_TRACK_DIST;
@@ -463,7 +455,6 @@ void Sounds::parseSound( edict_t *ent, const char *sample, float vol )
 			//debugMsg( "%s used HW-jumppad!\n", STRING(ent->v.netname) );
 		}
 		else if ( FStrEq( sample, "player/drink3.wav" ) ) {		// HW-bottle
-			clientIndex = ENTINDEX( ent ) - 1;
 			player[clientIndex].itemSensableDist = ITEM_SENS_DIST;
 			player[clientIndex].itemTrackableDist = ITEM_TRACK_DIST;
 			player[clientIndex].timeItemSound = worldTime() + 0.3;
@@ -484,8 +475,6 @@ void Sounds::parseSound( edict_t *ent, const char *sample, float vol )
 		else if ( FStrEq( sample, "weapons/pkup.wav" ) ||		// weapon pickup
 				  FStrEq( sample, "weapons/lock4.wav" ) ) {		// ammo pickup
 			const char *wpnName = STRING( ent->v.classname );
-			clientIndex = UTIL_GetNearestPlayerIndex( ent->v.origin ) - 1;
-			ent = INDEXENT( clientIndex+1 );
 			player[clientIndex].itemSensableDist = AMMO_SENS_DIST;
 			player[clientIndex].itemTrackableDist = AMMO_TRACK_DIST;
 			player[clientIndex].timeItemSound = worldTime() + 0.3;
@@ -493,21 +482,15 @@ void Sounds::parseSound( edict_t *ent, const char *sample, float vol )
 			if ( FStrEq( wpnName, "weapon_lightning" ) ||
 				 FStrEq( wpnName, "weapon_rocketlauncher" ) ||
 				 FStrEq( wpnName, "weapon_grenadelauncher" ) ||
-				 FStrEq( wpnName, "weapon_supernailgun" ) ) chat.registerGotWeapon( ent, wpnName );
+				 FStrEq( wpnName, "weapon_supernailgun" ) ) chat.registerGotWeapon(INDEXENT(clientIndex + 1), wpnName );
 		}
 		else if ( FStrEq( sample, "plats/freightmove2.wav" ) ) {	// lift usage
-			Vector pos = 0.5 * (ent->v.absmin + ent->v.absmax);  
-			pos.z = ent->v.absmax.z;
-			clientIndex = UTIL_GetNearestPlayerIndex( pos ) - 1;
-			//ent = INDEXENT( clientIndex+1 );
 			player[clientIndex].itemSensableDist = LIFT_SENS_DIST;
 			player[clientIndex].itemTrackableDist = LIFT_TRACK_DIST;
 			player[clientIndex].timeItemSound = worldTime() + 0.3;
 			//debugMsg( "%s used lift!\n", STRING(ent->v.netname) );
 		}
 		else if ( FStrEq( sample, "items/button4.wav" ) ) {	// button usage
-			clientIndex = UTIL_GetNearestPlayerIndex( ent->v.origin ) - 1;
-			//ent = INDEXENT( clientIndex+1 );
 			player[clientIndex].itemSensableDist = LIFT_SENS_DIST;
 			player[clientIndex].itemTrackableDist = LIFT_TRACK_DIST;
 			player[clientIndex].timeItemSound = worldTime() + 0.3;
@@ -515,23 +498,18 @@ void Sounds::parseSound( edict_t *ent, const char *sample, float vol )
 		}
 		else if ( FStrEq( sample, "items/health1.wav" ) ||
 				  FStrEq( sample, "items/r_item2.wav" ) ) {	// medkit or armor pickup
-			clientIndex = UTIL_GetNearestPlayerIndex( ent->v.origin ) - 1;
-			//ent = INDEXENT( clientIndex+1 );
 			player[clientIndex].itemSensableDist = ITEM_SENS_DIST;
 			player[clientIndex].itemTrackableDist = ITEM_TRACK_DIST;
 			player[clientIndex].timeItemSound = worldTime() + 0.3;
 			//debugMsg( "%s picked up medkit or armor!\n", STRING(ent->v.netname) );
 		}
 		else if ( FStrEq( sample, "items/armor1.wav" ) ) {	// armor pickup
-			clientIndex = ENTINDEX( ent ) - 1;
 			player[clientIndex].itemSensableDist = ITEM_SENS_DIST;
 			player[clientIndex].itemTrackableDist = ITEM_TRACK_DIST;
 			player[clientIndex].timeItemSound = worldTime() + 0.3;
 			//debugMsg( "%s picked up armor!\n", STRING(ent->v.netname) );
 		}
 		else if ( FStrEq( sample, "items/damage.wav" ) ) {			// quad-damage
-			clientIndex = UTIL_GetNearestPlayerIndex( ent->v.origin ) - 1;
-			//ent = INDEXENT( clientIndex+1 );
 			player[clientIndex].itemSensableDist = SPEC_ITEM_SENS_DIST;
 			player[clientIndex].itemTrackableDist = SPEC_ITEM_TRACK_DIST;
 			player[clientIndex].timeItemSound = worldTime() + 2.0;
