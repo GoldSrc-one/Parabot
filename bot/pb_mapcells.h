@@ -71,7 +71,8 @@ private:
 	short		cellHash[4096];
 	int			numCells;
 		
-	PBT_FoundCell	cellFound[256];	// holds all WPs found by getCellId()
+	static const int maxCellsFound = 256;
+	PBT_FoundCell	cellFound[maxCellsFound];	// holds all WPs found by getCellId()
 	int			numCellsFound;		// number of elements in cellSearch
 	//int			lastCellFound;		// last passed element
 

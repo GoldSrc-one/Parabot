@@ -69,13 +69,10 @@ Vector PB_MapCells::getAllignedPos( const Vector &pos )
 	return Vector( (float)(ix-4096), (float)(iy-4096), pos.z );
 }
 
-int dbgCnt;
-
 #define CHECK_BUCKET( hcode )													\
 																				\
 	cellId = cellHash[hcode];													\
-	dbgCnt = 0; \
-	while (cellId != NO_CELL_REGISTERED && dbgCnt++ < 1000) {										\
+	while (cellId != NO_CELL_REGISTERED && numCellsFound < maxCellsFound) {		\
 		if ( (dist = (pos-cellArray[cellId].pos()).Length()) < maxDist ) {		\
 			cellFound[numCellsFound++] = PBT_FoundCell( dist, cellId );			\
 			if (dist < closestDist) {											\
@@ -166,15 +163,9 @@ int PB_MapCells::addCell( PB_Cell newCell, bool initNbs, int addedFrom )
 	short cellId = cellHash[hashcode];
 	if (cellId == NO_CELL_REGISTERED) cellHash[hashcode] = numCells;
 	else {
-		dbgCnt = 0;
-		while (cellArray[cellId].nextCell() != NO_CELL_REGISTERED  && dbgCnt++ < 1000) {
+		while (cellArray[cellId].nextCell() != NO_CELL_REGISTERED) {
 			cellId = cellArray[cellId].nextCell();
 		}
-		/*if (dbgCnt == 1000) {
-			FILE *dfp=fopen( "parabot/crashlog.txt", "a" ); 
-			fprintf( dfp, ">1000 recursions in addCell()!\n" ); 
-			fclose( dfp );
-		}*/
 		cellArray[cellId].setNextCell( numCells );
 		if (cellId==numCells) errorMsg( "CellId=numCells!\n" );
 	}
