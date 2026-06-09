@@ -235,7 +235,7 @@ public:
 	bool operator==(const PB_Navpoint& O) const  {  return data.privateId == O.data.privateId; }
     bool operator<(const PB_Navpoint& O) const   {  return data.privateId < O.data.privateId;  }
 	
-
+	float		radius;
 private:
 
 	typedef struct {

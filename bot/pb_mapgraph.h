@@ -59,10 +59,7 @@ public:
 	// deleting existing (slower) path
 	// if path is not used, all path data get deleted!
 	
-	PB_Navpoint* getNearestNavpoint( const Vector &pos );
-	// returns the nearest navpoint to pos existing in the graph, NULL if graph is empty
-	
-	PB_Navpoint* getNearestNavpoint( const Vector &pos, int type );
+	PB_Navpoint* getNearestNavpoint( const Vector &pos, int type = 0, PB_Navpoint* candidate = nullptr);
 	// returns the nearest navpoint with given type to pos existing in the graph, 
 	// NULL if graph doesn't contain navpoints of the given type
 

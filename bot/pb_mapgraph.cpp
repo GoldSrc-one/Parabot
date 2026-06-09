@@ -15,7 +15,7 @@ const char *PNFidString = "Parabot Waypoint File 0.8      ";
 
 
 PB_MapGraph::PB_MapGraph() : 
-	graph( 2048, 64 )
+	graph( 5120, 64 )
 {
 	nextId = 0;
 	nextPathId = 0;	// Path ID
@@ -122,39 +122,24 @@ AdjPtr PB_MapGraph::findLinkedPath( int dataId, int startId, bool &found )
 	return adj;
 }
 
-
-PB_Navpoint* PB_MapGraph::getNearestNavpoint( const Vector &pos )
-// returns the nearest navpoint to pos existing in the graph, NULL if graph is empty
+PB_Navpoint* PB_MapGraph::getNearestNavpoint( const Vector &pos, int type, PB_Navpoint* candidate)
+// returns the nearest navpoint with given type to pos existing in the graph, 
+// NULL if graph doesn't contain navpoints of the given type
 {
+	if(candidate && (!type || candidate->type() == type) && (pos - candidate->pos()).Length() < candidate->radius)
+		return candidate;
+
 	float dx, dy, dz, dist, minDist = 999999;
 	int   minId = -1;
 
 	for (int i=0; i<numberOfNavpoints(); i++) {
-		dx = pos.x - graph[i].first.pos().x;
-		dy = pos.y - graph[i].first.pos().y;
-		dz = pos.z - graph[i].first.pos().z;
-		dist = dx*dx + dy*dy + dz*dz;
-		if (dist<minDist) {
-			minDist = dist;
-			minId = i;
-		}
-	}
-	if (minId>=0) return (PB_Navpoint*) &(graph[minId].first);
-	else return 0;
-}
+		auto& nav = graph[i].first;
+		if(type && nav.type() != type)
+			continue;
 
-
-PB_Navpoint* PB_MapGraph::getNearestNavpoint( const Vector &pos, int type )
-// returns the nearest navpoint with given type to pos existing in the graph, 
-// NULL if graph doesn't contain navpoints of the given type
-{
-	float dx, dy, dz, dist, minDist = 999999;
-	int   minId = -1;
-
-	for (int i=0; i<numberOfNavpoints(); i++) if (graph[i].first.type()==type) {
-		dx = pos.x - graph[i].first.pos().x;
-		dy = pos.y - graph[i].first.pos().y;
-		dz = pos.z - graph[i].first.pos().z;
+		dx = pos.x - nav.pos().x;
+		dy = pos.y - nav.pos().y;
+		dz = pos.z - nav.pos().z;
 		dist = dx*dx + dy*dy + dz*dz;
 		if (dist<minDist) {
 			minDist = dist;
@@ -224,6 +209,16 @@ PB_Navpoint* PB_MapGraph::getNearestRoamingNavpoint( edict_t *traveller, PB_Navp
 bool PB_MapGraph::addNavpoint( PB_Navpoint &navpoint )
 // add a new navpoint to the graph
 {
+	//figure out max radius of each navpoint for easier caching
+	navpoint.radius = 8192.f;
+	for(int i = 0; i < numberOfNavpoints(); i++) {
+		float radius = (graph[i].first.pos() - navpoint.pos()).Length() * 0.5f;
+		if(radius < graph[i].first.radius)
+			graph[i].first.radius = radius;
+		if(radius < navpoint.radius)
+			navpoint.radius = radius;
+	}
+
 	navpoint.setId( nextId++ );
 	navpoint.initEntityPtr();
 	//int gs = graph.size();

@@ -754,13 +754,13 @@ void PB_Observer::observeAll()
 			nav = getNearestNavpoint( obs[i].player );
 			if( !nav )
 				continue;
-			if ( nav->reached( obs[i].player ) ) {
+
+			if (nav != obs[i].lastReachedNav &&
+				// take care with plats, bot has to wait before approaching
+				(nav->entity() != obs[i].player->v.groundentity) &&
 				// check if reached new navpoint	
-				if ( (nav!=obs[i].lastReachedNav) &&
-					(nav->entity() != obs[i].player->v.groundentity) )	// take care with plats,
-				{																// bot has to wait before approaching
+				nav->reached( obs[i].player )) {
 					newNavpointReached( i, pos, nav );
-				}
 			}
 
 			updateCellInfo( i );

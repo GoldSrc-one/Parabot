@@ -130,7 +130,7 @@ void checkForMapChange()
 		
 		// set the time to check for automatically adding bots to dedicated servers
 		bot_check_time = gpGlobals->time + 10.0;
-		
+
 		nextJourneyTime = 0.f;
 		
 		// if "map" command was used, set bots in use to respawn state...
@@ -524,7 +524,7 @@ void cachePlayerData()
 	for (int i=1; i<=gpGlobals->maxClients; i++) {
 		edict_t *pPlayer = INDEXENT( i );
 		if (playerExists( pPlayer )) {
-			cashedNavpoint[i] = mapGraph.getNearestNavpoint( pPlayer->v.origin );
+			cashedNavpoint[i] = mapGraph.getNearestNavpoint( pPlayer->v.origin, 0, cashedNavpoint[i]);
 		}
 	}
 }
