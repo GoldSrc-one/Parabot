@@ -34,7 +34,7 @@ jobs:
 
       - name: Build
         run: |
-          msbuild Parabot.sln -p:Configuration=Release /t:Build /p:Platform=Win32
+          msbuild Parabot.sln -p:Configuration=Release /t:Build
 
       - name: Create zip
         run: |
