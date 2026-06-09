@@ -47,6 +47,8 @@ Vector playerPos;
 int mod_id;			// the MOD in which the bot runs
 float roundStartTime;
 
+float nextJourneyTime;
+
 extern float nextAirstrikeTime;
 
 void fixAngle( Vector &angle );
@@ -128,6 +130,8 @@ void checkForMapChange()
 		
 		// set the time to check for automatically adding bots to dedicated servers
 		bot_check_time = gpGlobals->time + 10.0;
+		
+		nextJourneyTime = 0.f;
 		
 		// if "map" command was used, set bots in use to respawn state...
 		for (int i=0; i < 32; i++)

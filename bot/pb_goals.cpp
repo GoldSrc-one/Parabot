@@ -715,6 +715,7 @@ PB_Navpoint* TryGetNearestNavpoint(CParabot* pb) {
 }
 
 static bool gGoalUnreachable[32] = {};
+extern float nextJourneyTime;
 void goalHandleGoal(CParabot* pb, PB_Percept* item) {
 	gGoalUnreachable[pb->slot] = false;
 	if(pb->actualPath) {
@@ -730,13 +731,14 @@ void goalHandleGoal(CParabot* pb, PB_Percept* item) {
 	if(!pb->actualNavpoint)
 		pb->actualNavpoint = TryGetNearestNavpoint(pb);
 
-	if(pb->actualNavpoint) {
-		auto goalNavPoint = mapGraph.getNearestNavpoint(item->entity->v.origin);
+	if(pb->actualNavpoint && nextJourneyTime < gpGlobals->time) {
+		auto goalNavPoint = mapGraph.getNearestNavpoint(item->entity->v.origin, 0, pb->actualNavpoint);
 		if(goalNavPoint && pb->actualNavpoint != goalNavPoint && mapGraph.getJourney(pb->actualNavpoint->id(), goalNavPoint->id(), PATH_NORMAL, pb->actualJourney)) {
 			pb->actualPath = pb->actualJourney.getNextPath();
 			pb->actualPath->startAttempt(worldTime());
 			pb->waypoint = pb->actualPath->getNextWaypoint();
 		}
+		nextJourneyTime = gpGlobals->time + 1.f;
 	}
 
 	auto viewOrigin = pb->botPos() + pb->ent->v.view_ofs;
