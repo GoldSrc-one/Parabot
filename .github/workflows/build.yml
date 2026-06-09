@@ -39,7 +39,7 @@ jobs:
       - name: Create zip
         run: |
           Copy-Item Release\Parabot.dll addons\parabot\dlls\parabot.dll
-          Copy-Item Release\Parabot.pdb addons\parabot\dlls\marine_bot.pdb
+          Copy-Item Release\Parabot.pdb addons\parabot\dlls\parabot.pdb
           Compress-Archive -Path addons -Destination addons.zip
 
       - name: Deploy artifacts
